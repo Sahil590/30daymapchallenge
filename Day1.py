@@ -12,7 +12,7 @@ custom_icon = dict(
 )
 
 df = pd.read_csv(
-    "Local_Nature_Reserves_England_6224075941597999982.csv",
+    "./data/Local_Nature_Reserves_England_6224075941597999982.csv",
     usecols=(
         "LNR_NAME",
         "LONGITUDE",
