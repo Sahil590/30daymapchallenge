@@ -15,7 +15,13 @@ app.layout = html.Div(
         dl.Map(
             center=[20, 0],
             zoom=2,
-            children=[dl.TileLayer(), dl.GeoJSON(data=geojson_data)],
+            children=[
+                dl.TileLayer(),
+                dl.GeoJSON(
+                    data=geojson_data,
+                    style={"color": "#181818", "weight": 1},
+                ),
+            ],
             style={"width": "100%", "height": "100vh"},
         )
     ]
