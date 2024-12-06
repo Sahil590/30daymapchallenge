@@ -13,7 +13,7 @@ df["longitude"] = df["LONGITUDE"].apply(parse)
 df["latitude"] = df["LATITUDE"].apply(parse)
 df.drop(columns=["LONGITUDE", "LATITUDE"], inplace=True)
 
-# Create the Plotly figure using go.Scattermapbox
+# Create the Plotly figure
 fig = go.Figure(
     go.Scattermapbox(
         lat=df["latitude"],

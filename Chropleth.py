@@ -1,6 +1,8 @@
 import json
 import pandas as pd
 import plotly.express as px
+import dash
+from dash import html, dcc
 
 # Load the CSV data
 df = pd.read_csv("./data/vehichle_data.csv")
@@ -13,7 +15,8 @@ df_aggregated = (
 )
 
 # Load the GeoJSON data
-geojson = json.load(open("./data/Counties.geojson", "r"))
+with open("./data/Counties.geojson", "r") as f:
+    geojson = json.load(f)
 
 # Extract all region codes from the GeoJSON file
 all_regions = [
@@ -28,7 +31,6 @@ all_regions_df = pd.DataFrame(
     }
 )
 
-
 # Merge the aggregated data with the all regions DataFrame
 df_merged = pd.merge(
     all_regions_df, df_aggregated, on="Lower tier local authorities Code", how="left"
@@ -37,7 +39,6 @@ df_merged = pd.merge(
 df_merged["Observation"] = df_merged["Observation_y"].fillna(df_merged["Observation_x"])
 df_merged = df_merged.drop(columns=["Observation_x", "Observation_y"])
 
-df_merged.to_csv("./data/test.csv", index=False)
 # Create the choropleth map
 fig = px.choropleth_map(
     df_merged,
@@ -47,9 +48,15 @@ fig = px.choropleth_map(
     color="Observation",
     hover_name="Lower tier local authorities",
     title="Car or Van Availability by Local Authority",
-    center={"lat": 54.5, "lon": -4},
     color_continuous_scale="GnBu",
+    center={"lat": 54.5, "lon": -4},
 )
 
 fig.update_geos(fitbounds="locations", visible=False)
-fig.show()
+
+app = dash.Dash(__name__)
+
+app.layout = html.Div([dcc.Graph(figure=fig)])
+
+if __name__ == "__main__":
+    app.run_server(debug=True)
